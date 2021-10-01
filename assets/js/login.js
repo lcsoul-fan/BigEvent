@@ -23,7 +23,7 @@ $(function() {
             }
 
         })
-        // 注册表单提交时间
+        // 注册表单提交事件
     $('#form-reg').on('submit', function(e) {
         console.log($(this).serialize());
         e.preventDefault()
@@ -41,7 +41,7 @@ $(function() {
         })
     })
 
-    // 登录表单提交时间
+    // 登录表单提交事件
     $('#form-log').submit(function(e) {
         e.preventDefault();
         $.ajax({
@@ -55,9 +55,7 @@ $(function() {
                 var token = res.token
                 sessionStorage.setItem('token', token);
                 layer.msg(res.message)
-                console.log(token);
-
-                // location.href = 'index.html'
+                location.href = 'index.html'
             }
         })
     })
