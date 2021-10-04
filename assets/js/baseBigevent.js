@@ -9,7 +9,6 @@ $.ajaxPrefilter(function(options) {
     }
     //统一对未授权登录进行处理，返回login页面
     options.complete = function(res) {
-        console.log(res);
         if (res.responseJSON.status == 1 && res.responseJSON.message === '身份认证失败！') {
             sessionStorage.removeItem('token');
             location.href = 'login.html';
