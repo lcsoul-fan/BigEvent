@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+    //导入路由
 const user = require('./route/user')
 const userinfo = require('./route/userinfo')
+const article = require('./route/aricle')
 const joi = require('joi')
 const jwt = require('express-jwt')
 const token = require('./unit/tool')
@@ -34,20 +36,11 @@ app.use(function(req, res, next) {
 app.use(jwt({ secret: token.secretKey, algorithms: ['HS256'] }).unless({ path: [/^\/api\//] }))
 
 
-//获取token中的用户信息
-// app.use(function(req, res, next) {
-//     const authorization = req.get('authorization').split(' ')[1]
-//     if (authorization) {
-//         req.user = analysis.analysisToken(authorization)
-//     }
-//     next()
-// })
-
 
 //app调用路由
 app.use('/api', user)
 app.use('/my', userinfo)
-
+app.use('/my', article)
 
 
 
