@@ -6,6 +6,7 @@ const userinfo = require('./route/userinfo')
 const joi = require('joi')
 const jwt = require('express-jwt')
 const token = require('./unit/tool')
+const analysis = require('./unit/tool')
 
 
 //用在中间件存放静态资源
@@ -29,8 +30,18 @@ app.use(function(req, res, next) {
 });
 
 
-//验证token
+//验证token中间件
 app.use(jwt({ secret: token.secretKey, algorithms: ['HS256'] }).unless({ path: [/^\/api\//] }))
+
+
+//获取token中的用户信息
+// app.use(function(req, res, next) {
+//     const authorization = req.get('authorization').split(' ')[1]
+//     if (authorization) {
+//         req.user = analysis.analysisToken(authorization)
+//     }
+//     next()
+// })
 
 
 //app调用路由

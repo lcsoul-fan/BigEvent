@@ -18,28 +18,32 @@ function getUserinfo(req, res) {
 
 function updateUserinfo(req, res) {
     const updateinfo = req.body;
-    const sqlStr = 'update userinfo set nickname=?,email=? where id =? ';
+    console.log(updateinfo);
+    const sqlStr = 'update userinfo set nickname=? ,email=? where id =? ';
     db.query(sqlStr, [updateinfo.nickname, updateinfo.email, updateinfo.id], (err, results) => {
         if (err) {
             return res.cc(err)
         }
+        console.log(results);
         if (results.affectedRows !== 1) {
-            return res.cc(err)
+            return res.cc('更新失败')
         }
         return res.cc('信息更新成功', 0)
     })
-
 }
 
 function updatepwd(req, res) {
-    const authorization = req.get('authorization').split(' ')[1]
+    // const authorization = req.get('authorization').split(' ')[1]
+    // console.log(req.user);
     const passpwd = req.body;
-    const userinfo = analysis.analysisToken(authorization)
-    if (!userinfo) {
+    // const userinfo = analysis.analysisToken(authorization)
+    console.log(req.user.username);
+    const username = req.user.username
+    if (!username) {
         return res.cc('用户不存在')
     }
     const sqlStr = 'select * from userinfo where username = ?'
-    db.query(sqlStr, [userinfo.username], (err, results) => {
+    db.query(sqlStr, [username], (err, results) => {
         if (err) {
             return res.cc(err)
         }
@@ -52,11 +56,18 @@ function updatepwd(req, res) {
         if (!bcryptjs.compareSync(passpwd.oldPwd, results[0].password)) {
             return res.cc('原密码有误')
         }
-        return res.cc('密码重置成功')
-
+        const updatepwdStr = 'update userinfo set password = ?where username = ?'
+        passpwd.newPwd = bcryptjs.hashSync(passpwd.newPwd, 10)
+        db.query(updatepwdStr, [passpwd.newPwd, username], (err, results) => {
+            if (err) {
+                return res.cc(err)
+            }
+            if (results.affectedRows !== 1) {
+                return res.cc(err)
+            }
+            return res.cc('密码重置成功')
+        })
     })
-
-
 }
 
 function updateAvatar(req, res) {
