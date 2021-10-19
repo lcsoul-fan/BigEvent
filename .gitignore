@@ -1,2 +1,4 @@
 #忽略任何目录下的node_modules文件夹
 node_modules/
+#忽略任何目录下的uploads文件夹
+uploads/

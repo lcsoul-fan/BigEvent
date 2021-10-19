@@ -44,10 +44,11 @@ function loginUser(req, res) {
         if (!bcryptjs.compareSync(userinfo.password, results[0].password)) {
             return res.cc('密码有误')
         }
+
         return res.send({
             status: 0,
             message: '登录成功',
-            token: getToken.getToken({ username: userinfo.username })
+            token: getToken.getToken({ id: results[0].id })
         })
     })
 }
