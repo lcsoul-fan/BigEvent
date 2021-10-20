@@ -46,12 +46,12 @@
     <script type="text/html" id="tbl-article">
         {{each data}}
         <tr>
-            <td>{{$value.Id}}</td>
+            <td>{{$value.id}}</td>
             <td>{{$value.name}}</td>
             <td>{{$value.alias}}</td>
             <td>
-                <button type="button" class="layui-btn  layui-btn-xs" id="modify" data-id="{{$value.Id}}">修改</button>
-                <button type="button" class="layui-btn  layui-btn-xs layui-btn-danger" id="del" data-id="{{$value.Id}}">删除</button>
+                <button type="button" class="layui-btn  layui-btn-xs" id="modify" data-id="{{$value.id}}">修改</button>
+                <button type="button" class="layui-btn  layui-btn-xs layui-btn-danger" id="del" data-id="{{$value.id}}">删除</button>
             </td>
         </tr>
         {{/each}}

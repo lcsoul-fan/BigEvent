@@ -1,10 +1,11 @@
 $.ajaxPrefilter(function(options) {
     //统一拼接请求地址
-    options.url = 'http://api-breakingnews-web.itheima.net' + options.url;
+    console.log(options.url);
+    options.url = 'http://127.0.0.1' + options.url;
     //统一对需要权限的定制增加 headers
     if (options.url.indexOf('/my/') !== -1) {
         options.headers = {
-            'Authorization': sessionStorage.getItem('token') || ""
+            'Authorization': 'bearer ' + sessionStorage.getItem('token') || ""
         }
     }
     //统一对未授权登录进行处理，返回login页面

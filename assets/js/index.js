@@ -30,6 +30,7 @@ function getUserInfo() {
 
 function renderUserInfo(userinfo) {
     var username = userinfo.nickname || userinfo.username;
+    console.log(username);
     $('.welcome').html('欢迎&nbsp;&nbsp;' + username)
     if (userinfo.user_pic !== null) {
         $('.layui-nav-img').attr('src', userinfo.user_pic);

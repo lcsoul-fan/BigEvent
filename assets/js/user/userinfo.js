@@ -28,7 +28,7 @@ $(function() {
     $('#userinfoform').on('submit', function(e) {
         e.preventDefault();
         $.ajax({
-            url: '/my/userinfo',
+            url: '/my/updateuserinfo',
             method: 'POST',
             data: $('#userinfoform').serialize(),
             success: function(res) {

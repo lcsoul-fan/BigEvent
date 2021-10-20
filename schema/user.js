@@ -22,5 +22,7 @@ module.exports.userinfo_schema = {
 }
 
 module.exports.avatar_schema = {
-    avatar
+    body: {
+        avatar
+    }
 }

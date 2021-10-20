@@ -28,7 +28,7 @@ $(function() {
         console.log($(this).serialize());
         e.preventDefault()
         $.ajax({
-            url: '/api/reguser',
+            url: '/api/register',
             data: $(this).serialize(),
             method: 'POST',
             success: function(res) {

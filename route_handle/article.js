@@ -2,36 +2,50 @@ const db = require('../db/db')
 
 
 function getArticleCates(req, res) {
-    const id = req.query
-    console.log(req.query);
-    if (!id.id) {
-        console.log(1);
-        const sqlStr = 'select * from article_cates where is_delete=0'
-        db.query(sqlStr, (err, results) => {
-            if (err) {
-                return res.cc(err)
-            }
-            return res.send({
-                status: 0,
-                message: '获取文章分类成功',
-                data: results
-            })
+    const sqlStr = 'select * from article_cates where is_delete=0'
+    db.query(sqlStr, (err, results) => {
+        if (err) {
+            return res.cc(err)
+        }
+        return res.send({
+            status: 0,
+            message: '获取文章分类成功',
+            data: results
         })
-    } else {
-        const sqlStr = 'select * from article_cates where is_delete=0 and id = ?'
-        db.query(sqlStr, [id.id], (err, results) => {
-            if (err) {
-                return res.cc(err)
-            }
-            return res.send({
-                status: 0,
-                message: '获取文章分类成功',
-                data: results
-            })
-        })
-    }
-
+    })
 }
+// } else {
+//     const sqlStr = 'select * from article_cates where is_delete=0 and id = ?'
+//     db.query(sqlStr, [id.id], (err, results) => {
+//         if (err) {
+//             return res.cc(err)
+//         }
+//         return res.send({
+//             status: 0,
+//             message: '获取文章分类成功',
+//             data: results
+//         })
+//     })
+// }
+function getArticleCatesById(req, res) {
+    const id = req.params.id
+    const sqlStr = 'select name,alias from article_cates where is_delete=0 and id = ?'
+    db.query(sqlStr, [id], (err, results) => {
+        if (err) {
+            return res.cc(err)
+        }
+        return res.send({
+            status: 0,
+            message: '获取文章分类成功',
+            data: results[0]
+        })
+    })
+}
+
+
+
+
+
 
 
 function addArticleCates(req, res) {
@@ -49,28 +63,22 @@ function addArticleCates(req, res) {
 }
 
 function delArticleCates(req, res) {
-    const id = req.query
-    const sqlStr = 'select * from article_cates where id =?'
-    db.query(sqlStr, [id.id], (err, results) => {
+    const id = req.params.id
+    console.log(id);
+    const delsqlStr = 'update article_cates set is_delete =1 where id = ?'
+    db.query(delsqlStr, [id], (err, results) => {
         if (err) {
             return res.cc(err)
         }
-        if (results.length <= 0) {
-            return res.cc('分类不存在')
-        }
-        const delsqlStr = 'update article_cates set is_delete =1 where id = ?'
-        db.query(delsqlStr, [id.id], (err, results) => {
-            if (err) {
-                return res.cc(err)
-            }
-            return res.cc('删除成功', 0)
-        })
+        return res.cc('删除成功', 0)
     })
+
 }
 
 
 function updateCate(req, res) {
     const cateinfo = req.body
+    console.log(cateinfo);
     const sqlStr = 'update article_cates set name = ?,alias=? where id =?and is_delete = 0'
     db.query(sqlStr, [cateinfo.name, cateinfo.alias, cateinfo.id], (err, results) => {
         if (err) {
@@ -90,5 +98,6 @@ module.exports = {
     getArticleCates,
     addArticleCates,
     delArticleCates,
-    updateCate
+    updateCate,
+    getArticleCatesById
 }
