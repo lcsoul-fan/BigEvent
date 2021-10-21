@@ -34,7 +34,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">选择框</label>
                     <div class="layui-input-block" style="width:60%">
-                        <select name="cate_id" lay-verify="required">
+                        <select name="cate_id">
                            
                       </select>
                     </div>
@@ -80,7 +80,7 @@
     <script type="text/html" id="temp_pub">
         <option value="">请选择文章类别</option>
         {{each data}}
-        <option value="{{$value.Id}}">{{$value.name}}</option>
+        <option value="{{$value.id}}">{{$value.name}}</option>
         {{/each}}
     </script>
 </body>

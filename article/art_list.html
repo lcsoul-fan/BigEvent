@@ -73,13 +73,13 @@
     <script type="text/html" id="temp_artlist">
         {{each data}}
         <tr>
-            <td><a href="javascript:;" id="artinfo" data-id="{{$value.Id}}">{{$value.title}}</a></td>
-            <td>{{$value.cate_name}}</td>
+            <td><a href="javascript:;" id="artinfo" data-id="{{$value.id}}">{{$value.title}}</a></td>
+            <td>{{$value.name}}</td>
             <td>{{$value.pub_date|dateformat}}</td>
             <td>{{$value.state}}</td>
             <td>
-                <button type="button" class="layui-btn layui-btn-xs " id="modify" data-id="{{$value.Id}}">修改</button>
-                <button type="button" class="layui-btn layui-btn-xs layui-btn-danger " id="del" data-id="{{$value.Id}}">删除</button>
+                <button type="button" class="layui-btn layui-btn-xs " id="modify" data-id="{{$value.id}}">修改</button>
+                <button type="button" class="layui-btn layui-btn-xs layui-btn-danger " id="del" data-id="{{$value.id}}">删除</button>
             </td>
         </tr>
         {{/each}}
@@ -87,20 +87,20 @@
     <script type="text/html" id="temp_typelist">
         <option value="">请选择分类</option>
         {{each data}}
-        <option value="{{$value.Id}}">{{$value.name}}</option>
+        <option value="{{$value.id}}">{{$value.name}}</option>
         {{/each}}
     </script>
     <script type="text/html" id="tempartinfo">
         <div class="main">
             <h3>{{title}}</h3>
             <ul>
-                <li>作者：<span>{{Id}}</span></li>
+                <li>作者：<span>{{username}}</span></li>
                 <li>发布时间：<span>{{pub_date}}</span></li>
-                <li>所属分类：<span>{{cate_id}}</span></li>
+                <li>所属分类：<span>{{name}}</span></li>
                 <li>状态：<span>{{state}}</span></li>
             </ul>
             <div class="kv_con">
-                <img src="{{cover_img}}" alt="">
+                <img src="../uploads/{{cover_img}}" alt="">
             </div>
             {{@content}}
         </div>

@@ -29,7 +29,7 @@ function getArticleCates(req, res) {
 // }
 function getArticleCatesById(req, res) {
     const id = req.params.id
-    const sqlStr = 'select name,alias from article_cates where is_delete=0 and id = ?'
+    const sqlStr = 'select * from article_cates where is_delete=0 and id = ?'
     db.query(sqlStr, [id], (err, results) => {
         if (err) {
             return res.cc(err)

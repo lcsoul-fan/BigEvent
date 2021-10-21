@@ -46,6 +46,13 @@ ul li {
 
 .kv_con {
     margin-top: 10px;
+    width: 300px;
+    height: 300px;
+}
+
+.kv_con img {
+    width: 300px;
+    height: 300px;
 }
 
 p {

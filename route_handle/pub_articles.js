@@ -5,6 +5,7 @@ function addAticles(req, res) {
     if (!req.file || req.file.fieldname !== 'cover_img') {
         return res.cc('封面必须要上传！')
     }
+    console.log(req.body);
     const reqData = {
         ...req.body,
         cover_img: req.file.filename,
@@ -31,10 +32,11 @@ function getArticleList(req, res) {
             if (err) {
                 res.cc(err)
             }
-            if (results[0]['count(*)'] / reqinfo.pagesize < reqinfo.pagenum) {
+            if (results[0]['count(*)'] / reqinfo.pagesize < reqinfo.pagenum - 1) {
                 return res.cc('页面超过可查询的最大值')
             };
-            const sqlStr = 'select * from pub_article where cate_id = ? and state = ?and is_delete = 0'
+            const total = results[0]['count(*)']
+            const sqlStr = 'select pub_article.*,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.cate_id = ? and pub_article.state = ? and pub_article.is_delete = 0'
             db.query(sqlStr, [reqinfo.cate_id, reqinfo.state], (err, results) => {
                 if (err) {
                     res.cc(err)
@@ -43,21 +45,23 @@ function getArticleList(req, res) {
                 return res.send({
                     status: 0,
                     message: '获取文章列表成功',
-                    data: results.slice((reqinfo.pagenum - 1) * reqinfo.pagesize, (reqinfo.pagenum - 1) * reqinfo.pagesize + reqinfo.pagesize)
+                    data: results.slice((reqinfo.pagenum - 1) * reqinfo.pagesize, (reqinfo.pagenum - 1) * reqinfo.pagesize + reqinfo.pagesize),
+                    total: total
                 })
             })
         })
 
     } else if (reqinfo.cate_id && !reqinfo.state) {
-        const countStr = 'select count(*) from pub_article where cate_id = ? and state = ?and is_delete = 0'
+        const countStr = 'select count(*) from pub_article where cate_id = ? and is_delete = 0'
         db.query(countStr, [reqinfo.cate_id, reqinfo.state], (err, results) => {
             if (err) {
                 res.cc(err)
             }
-            if (results[0]['count(*)'] / reqinfo.pagesize < reqinfo.pagenum) {
+            if (results[0]['count(*)'] / reqinfo.pagesize < reqinfo.pagenum - 1) {
                 return res.cc('页面超过可查询的最大值')
             };
-            const sqlStr = 'select * from pub_article where cate_id = ?and is_delete = 0'
+            const total = results[0]['count(*)']
+            const sqlStr = 'select pub_article.*,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.cate_id = ?and pub_article.is_delete = 0'
             db.query(sqlStr, [reqinfo.cate_id], (err, results) => {
                 if (err) {
                     res.cc(err)
@@ -65,7 +69,8 @@ function getArticleList(req, res) {
                 return res.send({
                     status: 0,
                     message: '获取文章列表成功',
-                    data: results.slice((reqinfo.pagenum - 1) * reqinfo.pagesize, (reqinfo.pagenum - 1) * reqinfo.pagesize + reqinfo.pagesize)
+                    data: results.slice((reqinfo.pagenum - 1) * reqinfo.pagesize, (reqinfo.pagenum - 1) * reqinfo.pagesize + reqinfo.pagesize),
+                    total: total
                 })
             })
         })
@@ -76,10 +81,11 @@ function getArticleList(req, res) {
             if (err) {
                 res.cc(err)
             }
-            if (results[0]['count(*)'] / reqinfo.pagesize < reqinfo.pagenum) {
+            if (results[0]['count(*)'] / reqinfo.pagesize < reqinfo.pagenum - 1) {
                 return res.cc('页面超过可查询的最大值')
             };
-            const sqlStr = 'select * from pub_article where state = ?and is_delete = 0'
+            const sqlStr = 'select pub_article.*,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.state = ? and pub_article.is_delete = 0'
+            const total = results[0]['count(*)']
             db.query(sqlStr, [reqinfo.state], (err, results) => {
                 if (err) {
                     res.cc(err)
@@ -87,7 +93,8 @@ function getArticleList(req, res) {
                 return res.send({
                     status: 0,
                     message: '获取文章列表成功',
-                    data: results.slice((reqinfo.pagenum - 1) * reqinfo.pagesize, (reqinfo.pagenum - 1) * reqinfo.pagesize + reqinfo.pagesize)
+                    data: results.slice((reqinfo.pagenum - 1) * reqinfo.pagesize, (reqinfo.pagenum - 1) * reqinfo.pagesize + reqinfo.pagesize),
+                    total: total
                 })
             })
         })
@@ -97,18 +104,21 @@ function getArticleList(req, res) {
             if (err) {
                 res.cc(err)
             }
-            if (results[0]['count(*)'] / reqinfo.pagesize < reqinfo.pagenum) {
+            if (results[0]['count(*)'] / reqinfo.pagesize < reqinfo.pagenum - 1) {
                 return res.cc('页面超过可查询的最大值')
             };
-            const sqlStr = 'select * from pub_article where is_delete = 0'
+            const total = results[0]['count(*)']
+            const sqlStr = 'select pub_article.*,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.is_delete = 0'
             db.query(sqlStr, (err, results) => {
+                console.log(results);
                 if (err) {
                     res.cc(err)
                 }
                 return res.send({
                     status: 0,
                     message: '获取文章列表成功',
-                    data: results.slice((reqinfo.pagenum - 1) * reqinfo.pagesize, (reqinfo.pagenum - 1) * reqinfo.pagesize + reqinfo.pagesize)
+                    data: results.slice((reqinfo.pagenum - 1) * reqinfo.pagesize, (reqinfo.pagenum - 1) * reqinfo.pagesize + reqinfo.pagesize),
+                    total: total
                 })
             })
         })
@@ -117,8 +127,9 @@ function getArticleList(req, res) {
 }
 
 function delArticle(req, res) {
-    const id = req.query.id
-    const sqlStr = 'update table pub_article set id_delete = 1 where id = ?'
+    const id = req.params.id
+    console.log(id);
+    const sqlStr = 'update  pub_article set is_delete = "1" where id = ?'
     db.query(sqlStr, [id], (err, results) => {
         if (err) {
             return res.cc(err)
@@ -127,24 +138,37 @@ function delArticle(req, res) {
             return res.cc('删除失败')
         }
         return res.cc('删除成功', 0)
-
     })
 }
 
 function getArticle(req, res) {
-    const id = req.query.id
-    const sqlStr = 'select * from pub_article where id = ?'
-    db.query(sqlStr, [id], (err, results) => {
+    const id = req.params.id
+    const userid = req.user.id
+    console.log(userid);
+
+    const sqlStr = 'select username,nickname from userinfo where id =?'
+    db.query(sqlStr, [userid], (err, results) => {
         if (err) {
             return res.cc(err)
         }
-        return res.send({
-            status: 0,
-            message: '获取文章成功',
-            data: results
-        })
+        console.log();
+        const username = results[0].nickname ? results[0].nickname : results[0].username
+        const sqlStr = 'select pub_article.*,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.id = ?'
+        db.query(sqlStr, [id], (err, results) => {
+            if (err) {
+                return res.cc(err)
+            }
+            results[0].username = username
+            console.log(results);
+            return res.send({
+                status: 0,
+                message: '获取文章成功',
+                data: results
 
+            })
+        })
     })
+
 }
 
 

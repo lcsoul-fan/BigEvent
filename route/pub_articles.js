@@ -7,7 +7,7 @@ const upload = multer({ dest: path.join(__dirname, '../uploads') })
 
 router.post('/article/add', upload.single('cover_img'), pub_articles.addAticles)
 router.get('/article/list', pub_articles.getArticleList)
-router.get('/article/delete', pub_articles.delArticle)
-router.get('/article', pub_articles.getArticle)
+router.get('/article/delete/:id', pub_articles.delArticle)
+router.get('/article/:id', pub_articles.getArticle)
 
 module.exports = router

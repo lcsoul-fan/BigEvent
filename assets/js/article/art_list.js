@@ -22,6 +22,7 @@ $(function() {
         var num = document.querySelectorAll('#del').length
         console.log(num);
         var id = $(this).attr('data-id')
+        console.log(id);
         indexdel = layer.open({
             title: '提示',
             content: '确认删除吗？',
@@ -49,6 +50,7 @@ $(function() {
     var indexinfo = null
     $('tbody').on('click', '#artinfo', function(e) {
         var id = $(this).attr('data-id')
+        console.log(id);
         $.ajax({
             method: 'GET',
             url: '/my/article/' + id,
@@ -56,7 +58,7 @@ $(function() {
                 if (res.status !== 0) {
                     layer.msg(res.message)
                 }
-                var strhtml = template('tempartinfo', res.data)
+                var strhtml = template('tempartinfo', res.data[0])
                 var areaWidth = $('#tblartlist').width() * 0.8
                 indexinfo = layer.open({
                     type: 1,
@@ -135,8 +137,8 @@ $(function() {
 template.defaults.imports.dateformat = function(date) {
     var newdate = new Date(date);
     var y = newdate.getFullYear();
-    var m = newdate.getMonth();
-    var d = padzero(newdate.getDay());
+    var m = newdate.getMonth() + 1;
+    var d = padzero(newdate.getDate());
     var hh = padzero(newdate.getHours());
     var mm = padzero(newdate.getMinutes());
     var ss = padzero(newdate.getSeconds());

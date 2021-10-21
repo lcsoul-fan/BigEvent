@@ -44,7 +44,7 @@ function loginUser(req, res) {
         if (!bcryptjs.compareSync(userinfo.password, results[0].password)) {
             return res.cc('密码有误')
         }
-
+        console.log(getToken.getToken({ id: results[0].id }));
         return res.send({
             status: 0,
             message: '登录成功',

@@ -5,7 +5,7 @@ $.ajaxPrefilter(function(options) {
     //统一对需要权限的定制增加 headers
     if (options.url.indexOf('/my/') !== -1) {
         options.headers = {
-            'Authorization': 'bearer ' + sessionStorage.getItem('token') || ""
+            'Authorization': sessionStorage.getItem('token') ? 'bearer ' + sessionStorage.getItem('token') : ""
         }
     }
     //统一对未授权登录进行处理，返回login页面
@@ -16,3 +16,5 @@ $.ajaxPrefilter(function(options) {
         }
     }
 })
+
+//&& res.responseJSON.message === '身份认证失败！'
