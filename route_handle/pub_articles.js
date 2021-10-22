@@ -171,6 +171,27 @@ function getArticle(req, res) {
 
 }
 
+function getArticleByid(req, res) {
+    const id = req.params.id;
+    const sqlStr = 'select pub_article.title,pub_article.cate_id,pub_article.content,pub_article.cover_img,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.id = ? and pub_article.is_delete = 0;';
+    db.query(sqlStr, [id], (err, results) => {
+        if (err) {
+            return res.cc(err)
+        }
+        return res.send({
+            status: 0,
+            message: '获取信息成功',
+            data: results
+        })
+    })
+}
+
+function updateArticle(req, res) {
+    console.log(req.file);
+    console.log(req.body)
+}
+
+
 
 
 
@@ -178,5 +199,7 @@ module.exports = {
     addAticles,
     getArticleList,
     delArticle,
-    getArticle
+    getArticle,
+    getArticleByid,
+    updateArticle
 }
