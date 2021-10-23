@@ -145,6 +145,7 @@ $(function() {
                     $('#title').attr('value', res.data[0].title)
                     $('#defaultval').html(res.data[0].name)
                     $('#defaultval').attr('value', res.data[0].cate_id)
+                    $('#articleid').attr('value', res.data[0].id)
                     $image
                         .cropper('destroy') // 销毁旧的裁剪区域
                         .attr('src', '../uploads/' + res.data[0].cover_img) // 重新设置图片路径
@@ -192,6 +193,7 @@ $(function() {
         $('#pubform').on('submit', function(e) {
             e.preventDefault();
             var fd = new FormData($(this)[0])
+            fd.append('id', id)
             fd.append('state', state)
             $image
                 .cropper('getCroppedCanvas', { // 创建一个 Canvas 画布
@@ -200,11 +202,11 @@ $(function() {
                 })
                 .toBlob(function(blob) { // 将 Canvas 画布上的内容，转化为文件对象
                     fd.append('cover_img', blob)
-                    publishArticle(fd)
+                    updateArticle(fd)
                 })
         })
 
-        function publishArticle(fd) {
+        function updateArticle(fd) {
             $.ajax({
                 method: 'POST',
                 url: '/my/update/article',
@@ -215,14 +217,12 @@ $(function() {
                     if (res.status !== 0) {
                         return layer.msg(res.message)
                     }
-                    layer.msg('发布成功')
+                    layer.msg('更新成功')
                     location.href = 'art_list.html'
                 }
 
             })
         }
-
-
 
         function getArtCate() {
             $.ajax({

@@ -5,7 +5,6 @@ function addAticles(req, res) {
     if (!req.file || req.file.fieldname !== 'cover_img') {
         return res.cc('封面必须要上传！')
     }
-    console.log(req.body);
     const reqData = {
         ...req.body,
         cover_img: req.file.filename,
@@ -110,7 +109,6 @@ function getArticleList(req, res) {
             const total = results[0]['count(*)']
             const sqlStr = 'select pub_article.*,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.is_delete = 0'
             db.query(sqlStr, (err, results) => {
-                console.log(results);
                 if (err) {
                     res.cc(err)
                 }
@@ -151,7 +149,6 @@ function getArticle(req, res) {
         if (err) {
             return res.cc(err)
         }
-        console.log();
         const username = results[0].nickname ? results[0].nickname : results[0].username
         const sqlStr = 'select pub_article.*,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.id = ?'
         db.query(sqlStr, [id], (err, results) => {
@@ -173,7 +170,7 @@ function getArticle(req, res) {
 
 function getArticleByid(req, res) {
     const id = req.params.id;
-    const sqlStr = 'select pub_article.title,pub_article.cate_id,pub_article.content,pub_article.cover_img,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.id = ? and pub_article.is_delete = 0;';
+    const sqlStr = 'select pub_article.id,pub_article.title,pub_article.cate_id,pub_article.content,pub_article.cover_img,article_cates.name from pub_article inner join article_cates on pub_article.cate_id = article_cates.id where pub_article.id = ? and pub_article.is_delete = 0;';
     db.query(sqlStr, [id], (err, results) => {
         if (err) {
             return res.cc(err)
@@ -188,7 +185,26 @@ function getArticleByid(req, res) {
 
 function updateArticle(req, res) {
     console.log(req.file);
-    console.log(req.body)
+    console.log(req.body);
+    if (!req.file || req.file.fieldname !== 'cover_img') {
+        return res.cc('封面必须要上传！')
+    }
+    const reqData = {
+        ...req.body,
+        cover_img: req.file.filename,
+        pub_date: new Date(),
+        author_id: req.user.id
+    }
+    const sqlStr = 'update pub_article set? where id = ?'
+    db.query(sqlStr, [reqData, req.body.id], (err, results) => {
+        if (err) {
+            res.cc(err)
+        }
+        if (results.affectedRows !== 1) {
+            return res.cc('更新失败')
+        }
+        res.cc('更新成功', 0)
+    })
 }
 
 

@@ -64,7 +64,6 @@ function addArticleCates(req, res) {
 
 function delArticleCates(req, res) {
     const id = req.params.id
-    console.log(id);
     const delsqlStr = 'update article_cates set is_delete =1 where id = ?'
     db.query(delsqlStr, [id], (err, results) => {
         if (err) {
@@ -78,7 +77,6 @@ function delArticleCates(req, res) {
 
 function updateCate(req, res) {
     const cateinfo = req.body
-    console.log(cateinfo);
     const sqlStr = 'update article_cates set name = ?,alias=? where id =?and is_delete = 0'
     db.query(sqlStr, [cateinfo.name, cateinfo.alias, cateinfo.id], (err, results) => {
         if (err) {
